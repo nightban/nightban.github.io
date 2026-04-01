@@ -7,7 +7,7 @@
 <style>
 body {
   margin: 0;
-  background: #0f172a;
+  background: white; /* ВЕСЬ ФОН БЕЛЫЙ */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,52 +15,47 @@ body {
   font-family: Arial;
 }
 
-/* общий блок */
 .atm {
   display: flex;
   align-items: center;
 }
 
-/* боковые кнопки */
+/* БОКОВЫЕ КНОПКИ */
 .side {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .side button {
-  width: 120px;
-  padding: 15px;
+  width: 90px;
+  padding: 10px;
   background: black;
   color: white;
   border: 2px solid black;
-  cursor: pointer;
 }
 
-.side button:active {
-  background: #333;
-}
-
-/* экран */
+/* МЕНЬШИЙ ЭКРАН */
 .device {
-  width: 400px;
-  height: 700px;
+  width: 300px;   /* уменьшили */
+  height: 450px;  /* уменьшили */
   background: white;
-  border: 3px solid black;
+  border: 2px solid black;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
+/* ЛОГО */
 .header {
-  padding: 10px;
+  padding: 5px;
   border-bottom: 2px solid black;
 }
 
 .logo {
-  height: 40px;
+  height: 30px;
 }
 
+/* ЭКРАН */
 .screen {
   flex: 1;
   display: flex;
@@ -68,12 +63,12 @@ body {
   align-items: center;
   text-align: center;
   padding: 10px;
+  font-size: 14px; /* уменьшили текст */
 }
 
-.bottom {
-  padding: 10px;
-  border-top: 2px solid black;
-  text-align: center;
+/* кнопки */
+button {
+  cursor: pointer;
 }
 </style>
 </head>
@@ -82,10 +77,8 @@ body {
 
 <div class="atm">
 
-  <!-- ЛЕВАЯ КОЛОНКА -->
   <div class="side" id="leftButtons"></div>
 
-  <!-- ЭКРАН -->
   <div class="device">
 
     <div class="header">
@@ -97,36 +90,26 @@ body {
       <button onclick="start()">Я вставил карту</button>
     </div>
 
-    <div class="bottom" id="bottom"></div>
-
   </div>
 
-  <!-- ПРАВАЯ КОЛОНКА -->
   <div class="side" id="rightButtons"></div>
 
 </div>
 
 <script>
 let balance = 1000;
-let amount = "";
+let input = "";
 
-/* старт */
 function start() {
   showPin();
 }
 
-/* PIN */
 function showPin() {
   document.getElementById("screen").innerHTML = `
     <div>Введите PIN</div>
-    <div>${"*".repeat(amount.length)}</div>
+    <div>${"*".repeat(input.length)}</div>
   `;
 
-  renderPinButtons();
-}
-
-/* кнопки PIN */
-function renderPinButtons() {
   document.getElementById("leftButtons").innerHTML = `
     <button onclick="press(1)">1</button>
     <button onclick="press(2)">2</button>
@@ -145,94 +128,45 @@ function renderPinButtons() {
 }
 
 function press(n) {
-  if (amount.length < 4) {
-    amount += n;
+  if (input.length < 4) {
+    input += n;
     showPin();
   }
 }
 
-/* вход */
 function login() {
   showMenu();
 }
 
-/* меню */
 function showMenu() {
   document.getElementById("screen").innerHTML = `
-    <div>Баланс: ${balance}₽</div>
-  `;
-
-  document.getElementById("leftButtons").innerHTML = `
-    <button onclick="withdrawMenu()">Снять</button>
-    <button onclick="showMenu()">Баланс</button>
-    <button onclick="exit()">Выход</button>
-    <button>-</button>
-    <button>-</button>
-  `;
-
-  document.getElementById("rightButtons").innerHTML = `
-    <button>-</button>
-    <button>-</button>
-    <button>-</button>
-    <button>-</button>
-    <button>-</button>
-  `;
-}
-
-/* ввод суммы */
-function withdrawMenu() {
-  amount = "";
-
-  document.getElementById("screen").innerHTML = `
-    <div>Введите сумму:</div>
-    <div>${amount}</div>
-  `;
-
-  document.getElementById("leftButtons").innerHTML = `
-    <button onclick="add(1)">1</button>
-    <button onclick="add(2)">2</button>
-    <button onclick="add(3)">3</button>
-    <button onclick="add(4)">4</button>
-    <button onclick="add(5)">5</button>
-  `;
-
-  document.getElementById("rightButtons").innerHTML = `
-    <button onclick="add(6)">6</button>
-    <button onclick="add(7)">7</button>
-    <button onclick="add(8)">8</button>
-    <button onclick="add(9)">9</button>
-    <button onclick="confirmWithdraw()">Далее</button>
-  `;
-}
-
-function add(n) {
-  amount += n;
-  withdrawMenu();
-}
-
-/* подтверждение */
-function confirmWithdraw() {
-  let sum = parseInt(amount) || 0;
-
-  if (sum > balance) {
-    document.getElementById("screen").innerHTML = `
-      Недостаточно средств
-    `;
-    return;
-  }
-
-  balance -= sum;
-
-  document.getElementById("screen").innerHTML = `
-    Вы сняли ${sum}₽<br>
     Баланс: ${balance}₽
   `;
 
-  document.getElementById("leftButtons").innerHTML = "";
-  document.getElementById("rightButtons").innerHTML = "";
+  document.getElementById("leftButtons").innerHTML = `
+    <button onclick="withdraw()">Снять</button>
+    <button>-</button>
+    <button>-</button>
+    <button>-</button>
+    <button>-</button>
+  `;
+
+  document.getElementById("rightButtons").innerHTML = `
+    <button>-</button>
+    <button>-</button>
+    <button>-</button>
+    <button>-</button>
+    <button onclick="exit()">Выход</button>
+  `;
 }
 
-/* выход */
+function withdraw() {
+  document.getElementById("screen").innerHTML = `
+    Снято 100₽
+  `;
+  balance -= 100;
+}
+
 function exit() {
   document.getElementById("screen").innerHTML = `
     Пожалуйста, заберите карту и деньги
