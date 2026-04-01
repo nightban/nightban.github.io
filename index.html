@@ -15,6 +15,32 @@ body {
   font-family: Arial;
 }
 
+/* общий блок */
+.atm {
+  display: flex;
+  align-items: center;
+}
+
+/* боковые кнопки */
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.side button {
+  width: 120px;
+  padding: 15px;
+  background: black;
+  color: white;
+  border: 2px solid black;
+  cursor: pointer;
+}
+
+.side button:active {
+  background: #333;
+}
+
 /* экран */
 .device {
   width: 400px;
@@ -23,9 +49,9 @@ body {
   border: 3px solid black;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
-/* логотип */
 .header {
   padding: 10px;
   border-bottom: 2px solid black;
@@ -35,120 +61,184 @@ body {
   height: 40px;
 }
 
-/* экран внутри */
 .screen {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  color: black;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
 }
 
-/* PIN отображение */
-.pin-display {
-  font-size: 22px;
-  margin-bottom: 20px;
-  letter-spacing: 5px;
-}
-
-/* кнопки */
-.keypad {
-  display: grid;
-  grid-template-columns: repeat(3, 80px);
-  gap: 10px;
-}
-
-button {
-  padding: 20px;
-  font-size: 18px;
-  background: black;
-  color: white;
-  border: 2px solid black;
-  cursor: pointer;
-}
-
-button:active {
-  background: #333;
+.bottom {
+  padding: 10px;
+  border-top: 2px solid black;
+  text-align: center;
 }
 </style>
 </head>
 
 <body>
 
-<div class="device">
+<div class="atm">
 
-  <div class="header">
-    <img src="logo.png" class="logo">
-  </div>
+  <!-- ЛЕВАЯ КОЛОНКА -->
+  <div class="side" id="leftButtons"></div>
 
-  <div class="screen" id="screen">
-    <div>Введите PIN</div>
+  <!-- ЭКРАН -->
+  <div class="device">
 
-    <div class="pin-display" id="pinDisplay"></div>
-
-    <div class="keypad">
-      <button onclick="press(1)">1</button>
-      <button onclick="press(2)">2</button>
-      <button onclick="press(3)">3</button>
-      <button onclick="press(4)">4</button>
-      <button onclick="press(5)">5</button>
-      <button onclick="press(6)">6</button>
-      <button onclick="press(7)">7</button>
-      <button onclick="press(8)">8</button>
-      <button onclick="press(9)">9</button>
-      <button onclick="clearPin()">C</button>
-      <button onclick="press(0)">0</button>
-      <button onclick="login()">OK</button>
+    <div class="header">
+      <img src="logo.png" class="logo">
     </div>
+
+    <div class="screen" id="screen">
+      <div>Вставьте карту</div>
+      <button onclick="start()">Я вставил карту</button>
+    </div>
+
+    <div class="bottom" id="bottom"></div>
+
   </div>
+
+  <!-- ПРАВАЯ КОЛОНКА -->
+  <div class="side" id="rightButtons"></div>
 
 </div>
 
 <script>
-let pin = "";
 let balance = 1000;
+let amount = "";
 
-function press(num) {
-  if (pin.length < 4) {
-    pin += num;
-    document.getElementById("pinDisplay").innerText = "*".repeat(pin.length);
+/* старт */
+function start() {
+  showPin();
+}
+
+/* PIN */
+function showPin() {
+  document.getElementById("screen").innerHTML = `
+    <div>Введите PIN</div>
+    <div>${"*".repeat(amount.length)}</div>
+  `;
+
+  renderPinButtons();
+}
+
+/* кнопки PIN */
+function renderPinButtons() {
+  document.getElementById("leftButtons").innerHTML = `
+    <button onclick="press(1)">1</button>
+    <button onclick="press(2)">2</button>
+    <button onclick="press(3)">3</button>
+    <button onclick="press(4)">4</button>
+    <button onclick="press(5)">5</button>
+  `;
+
+  document.getElementById("rightButtons").innerHTML = `
+    <button onclick="press(6)">6</button>
+    <button onclick="press(7)">7</button>
+    <button onclick="press(8)">8</button>
+    <button onclick="press(9)">9</button>
+    <button onclick="login()">OK</button>
+  `;
+}
+
+function press(n) {
+  if (amount.length < 4) {
+    amount += n;
+    showPin();
   }
 }
 
-function clearPin() {
-  pin = "";
-  document.getElementById("pinDisplay").innerText = "";
-}
-
+/* вход */
 function login() {
-  // любой PIN принимается
   showMenu();
 }
 
+/* меню */
 function showMenu() {
   document.getElementById("screen").innerHTML = `
-    <div>Баланс: ${balance}₽</div><br>
-    <button onclick="withdraw()">Снять 100</button>
+    <div>Баланс: ${balance}₽</div>
+  `;
+
+  document.getElementById("leftButtons").innerHTML = `
+    <button onclick="withdrawMenu()">Снять</button>
+    <button onclick="showMenu()">Баланс</button>
     <button onclick="exit()">Выход</button>
+    <button>-</button>
+    <button>-</button>
+  `;
+
+  document.getElementById("rightButtons").innerHTML = `
+    <button>-</button>
+    <button>-</button>
+    <button>-</button>
+    <button>-</button>
+    <button>-</button>
   `;
 }
 
-function withdraw() {
-  balance -= 100;
+/* ввод суммы */
+function withdrawMenu() {
+  amount = "";
+
   document.getElementById("screen").innerHTML = `
-    <div>Вы сняли 100₽</div>
-    <div>Баланс: ${balance}₽</div><br>
-    <button onclick="exit()">Завершить</button>
+    <div>Введите сумму:</div>
+    <div>${amount}</div>
+  `;
+
+  document.getElementById("leftButtons").innerHTML = `
+    <button onclick="add(1)">1</button>
+    <button onclick="add(2)">2</button>
+    <button onclick="add(3)">3</button>
+    <button onclick="add(4)">4</button>
+    <button onclick="add(5)">5</button>
+  `;
+
+  document.getElementById("rightButtons").innerHTML = `
+    <button onclick="add(6)">6</button>
+    <button onclick="add(7)">7</button>
+    <button onclick="add(8)">8</button>
+    <button onclick="add(9)">9</button>
+    <button onclick="confirmWithdraw()">Далее</button>
   `;
 }
 
+function add(n) {
+  amount += n;
+  withdrawMenu();
+}
+
+/* подтверждение */
+function confirmWithdraw() {
+  let sum = parseInt(amount) || 0;
+
+  if (sum > balance) {
+    document.getElementById("screen").innerHTML = `
+      Недостаточно средств
+    `;
+    return;
+  }
+
+  balance -= sum;
+
+  document.getElementById("screen").innerHTML = `
+    Вы сняли ${sum}₽<br>
+    Баланс: ${balance}₽
+  `;
+
+  document.getElementById("leftButtons").innerHTML = "";
+  document.getElementById("rightButtons").innerHTML = "";
+}
+
+/* выход */
 function exit() {
   document.getElementById("screen").innerHTML = `
-    <div>Пожалуйста, заберите карту и деньги</div>
+    Пожалуйста, заберите карту и деньги
   `;
 }
 </script>
 
 </body>
-  </html>
+</html>
