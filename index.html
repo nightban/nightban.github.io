@@ -7,7 +7,7 @@
 <style>
 body {
   margin: 0;
-  background: white; /* ВЕСЬ ФОН БЕЛЫЙ */
+  background: white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,47 +15,51 @@ body {
   font-family: Arial;
 }
 
+/* “планшет” 20:15 */
 .atm {
   display: flex;
   align-items: center;
+  width: 600px;
+  height: 450px;
 }
 
-/* БОКОВЫЕ КНОПКИ */
+/* боковые кнопки */
 .side {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  justify-content: space-between;
+  height: 100%;
 }
 
+/* сами кнопки */
 .side button {
-  width: 90px;
-  padding: 10px;
+  width: 100px;
+  height: 60px;
   background: black;
   color: white;
-  border: 2px solid black;
+  border: none; /* УБРАЛИ КОНТУР */
 }
 
-/* МЕНЬШИЙ ЭКРАН */
+/* экран */
 .device {
-  width: 300px;   /* уменьшили */
-  height: 450px;  /* уменьшили */
+  flex: 1;
+  height: 100%;
   background: white;
-  border: 2px solid black;
   display: flex;
   flex-direction: column;
 }
 
-/* ЛОГО */
+/* верх */
 .header {
   padding: 5px;
-  border-bottom: 2px solid black;
 }
 
+/* логотип */
 .logo {
   height: 30px;
 }
 
-/* ЭКРАН */
+/* экран */
 .screen {
   flex: 1;
   display: flex;
@@ -63,10 +67,15 @@ body {
   align-items: center;
   text-align: center;
   padding: 10px;
-  font-size: 14px; /* уменьшили текст */
 }
 
-/* кнопки */
+/* кнопки внизу */
+.bottom {
+  padding: 5px;
+  text-align: center;
+}
+
+/* кнопки внутри */
 button {
   cursor: pointer;
 }
@@ -77,8 +86,10 @@ button {
 
 <div class="atm">
 
+  <!-- СЛЕВА -->
   <div class="side" id="leftButtons"></div>
 
+  <!-- ЭКРАН -->
   <div class="device">
 
     <div class="header">
@@ -92,6 +103,7 @@ button {
 
   </div>
 
+  <!-- СПРАВА -->
   <div class="side" id="rightButtons"></div>
 
 </div>
@@ -161,10 +173,10 @@ function showMenu() {
 }
 
 function withdraw() {
-  document.getElementById("screen").innerHTML = `
-    Снято 100₽
-  `;
   balance -= 100;
+  document.getElementById("screen").innerHTML = `
+    Вы сняли 100₽
+  `;
 }
 
 function exit() {
