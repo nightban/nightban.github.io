@@ -7,26 +7,26 @@
 <style>
 body {
   margin: 0;
-  font-family: Arial;
   background: #0f172a;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  font-family: Arial;
 }
 
+/* экран планшета */
 .device {
-  width: 360px;
-  height: 600px;
-  background: #020617;
-  border: 2px solid white;
+  width: 400px;
+  height: 700px;
+  background: #052e16; /* зелёный фон */
+  border: 3px solid white;
   display: flex;
   flex-direction: column;
 }
 
+/* верх */
 .header {
-  display: flex;
-  align-items: center;
   padding: 10px;
   border-bottom: 2px solid white;
 }
@@ -35,15 +35,21 @@ body {
   height: 40px;
 }
 
+/* экран */
 .screen {
   flex: 1;
-  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
   text-align: center;
+  padding: 20px;
 }
 
 input {
   padding: 10px;
-  font-size: 16px;
+  font-size: 18px;
   border: 2px solid white;
   background: black;
   color: white;
@@ -63,29 +69,21 @@ button:active {
   background: white;
   color: black;
 }
-
-.msg {
-  margin-top: 20px;
-}
 </style>
 </head>
 
 <body>
 
 <div class="device">
-  
+
   <div class="header">
     <img src="logo.png" class="logo">
   </div>
 
-  <div class="screen">
-    <div>Введите PIN:</div>
-    <input type="password" id="pin">
-    
-    <br>
-    <button onclick="login()">Войти</button>
-
-    <div class="msg" id="msg"></div>
+  <div class="screen" id="screen">
+    <!-- старт -->
+    <div>Вставьте карту</div>
+    <button onclick="cardInserted()">Я вставил карту</button>
   </div>
 
 </div>
@@ -93,26 +91,39 @@ button:active {
 <script>
 let balance = 1000;
 
+function cardInserted() {
+  document.getElementById("screen").innerHTML = `
+    <div>Введите PIN:</div>
+    <input type="password" id="pin">
+    <button onclick="login()">Войти</button>
+  `;
+}
+
 function login() {
-  document.getElementById("msg").innerHTML = `
-    Баланс: ${balance}₽<br><br>
-    <button onclick="withdraw()">Снять 100</button><br>
-    <button onclick="exit()">Выход</button>
+  // любой PIN проходит
+  showMenu();
+}
+
+function showMenu() {
+  document.getElementById("screen").innerHTML = `
+    <div>Баланс: ${balance}₽</div>
+    <button onclick="withdraw()">Снять 100</button>
+    <button onclick="showExit()">Выход</button>
   `;
 }
 
 function withdraw() {
   balance -= 100;
-  document.getElementById("msg").innerHTML = `
-    Вы сняли 100₽<br>
-    Баланс: ${balance}₽<br><br>
-    <button onclick="exit()">Завершить</button>
+  document.getElementById("screen").innerHTML = `
+    <div>Вы сняли 100₽</div>
+    <div>Баланс: ${balance}₽</div>
+    <button onclick="showExit()">Завершить</button>
   `;
 }
 
-function exit() {
-  document.getElementById("msg").innerHTML = `
-    Пожалуйста, заберите карту и деньги.
+function showExit() {
+  document.getElementById("screen").innerHTML = `
+    <div>Пожалуйста, заберите карту и деньги</div>
   `;
 }
 </script>
